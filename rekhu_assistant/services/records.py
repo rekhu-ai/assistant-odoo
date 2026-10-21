@@ -5,6 +5,7 @@ lines) and are turned into what the ORM takes."""
 from datetime import date, datetime
 
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
+from odoo.tools.misc import formatLang
 
 # fields the assistant never writes, whatever the model
 NEVER = {'id', 'create_uid', 'create_date', 'write_uid', 'write_date', '__last_update', 'display_name', 'message_ids', 'message_follower_ids', 'activity_ids', 'website_message_ids'}
@@ -192,6 +193,9 @@ def readable_values(env, model_name, given):
             out[label] = dict(f['selection']).get(value, value)
         elif kind == 'boolean':
             out[label] = bool(value)
+        elif kind in ('monetary', 'float', 'integer') and isinstance(value, (int, float)) and not isinstance(value, bool):
+            # as the user's language writes numbers; an amount with the company's currency
+            out[label] = formatLang(env, value, digits=0 if kind == 'integer' else None, currency_obj=env.company.currency_id if kind == 'monetary' else None)
         else:
             out[label] = value
     return out

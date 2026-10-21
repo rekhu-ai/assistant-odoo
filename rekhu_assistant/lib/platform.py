@@ -64,12 +64,12 @@ def message(config, who, body, on_text):
     return read(response, on_text)
 
 
-def balance(config):
+def balance(config, timeout=15):
     """The account's credit, to check a key from the settings: {'prepaid': …, 'balance': {'display': …}}."""
     key = parse_key(config['secret_key'])
     if not key:
         raise Refused('That is not a Rekhu secret key (agk_…).', 400, 'config')
-    response = requests.get('%s/v1/balance' % config['platform'], headers=headers(key, config['version']), timeout=15)
+    response = requests.get('%s/v1/balance' % config['platform'], headers=headers(key, config['version']), timeout=timeout)
     if response.status_code >= 400:
         try:
             error = response.json().get('error') or {}
