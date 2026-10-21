@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- conversations nobody continued for two weeks are removed -->
+    <record id="ir_cron_rekhu_assistant_prune" model="ir.cron">
+        <field name="name">Rekhu Assistant: remove old conversations</field>
+        <field name="model_id" ref="model_rekhu_assistant_conversation"/>
+        <field name="state">code</field>
+        <field name="code">model._rekhu_prune()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>
