@@ -19,6 +19,30 @@ class ResConfigSettings(models.TransientModel):
     rekhu_assistant_group_id = fields.Many2one('res.groups', 'Who gets the assistant', config_parameter='rekhu_assistant.group_id', help='The users of this group see the chat. Empty: every internal user.')
 
     rekhu_assistant_rules = fields.Integer('Rules', compute='_compute_rekhu_assistant_rules')
+    rekhu_assistant_credit = fields.Char('Credit', compute='_compute_rekhu_assistant_credit')
+    rekhu_assistant_credit_note = fields.Char(compute='_compute_rekhu_assistant_credit')
+
+    def _compute_rekhu_assistant_credit(self):
+        """The credit left on the Rekhu account, read live when the settings open; a short note when it cannot be read."""
+        credit, note = False, False
+        config = self.env['rekhu.assistant.conversation']._rekhu_config()
+        if not config.get('secret_key'):
+            note = _('Add the secret key below to see the credit.')
+        else:
+            try:
+                answer = platform.balance(config, timeout=5)
+                credit = (answer.get('balance') or {}).get('display') or False
+            except platform.Refused as error:
+                note = str(error)
+            except Exception:  # noqa: BLE001 the network, a proxy, a wrong address: the settings still open
+                note = _('Rekhu could not be reached just now.')
+        for settings in self:
+            settings.rekhu_assistant_credit = credit
+            settings.rekhu_assistant_credit_note = note
+
+    def action_rekhu_assistant_top_up(self):
+        """The credit page of the Rekhu account, in a new tab."""
+        return {'type': 'ir.actions.act_url', 'url': 'https://rekhu.com/account/credit', 'target': 'new'}
 
     def _compute_rekhu_assistant_rules(self):
         count = self.env['rekhu.assistant.scope'].sudo().search_count([])

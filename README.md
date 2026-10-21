@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Rekhu Assistant for Odoo" src="static/description/icon.png" width="96">
+  <img alt="Rekhu Assistant for Odoo" src="rekhu_assistant/static/description/icon.png" width="96">
 </p>
 
 <h1 align="center">Rekhu Assistant for Odoo</h1>
@@ -61,10 +61,12 @@ git clone --branch 18.0 https://github.com/rekhu-ai/assistant-odoo.git
 Put `rekhu_assistant` in your addons path, update the apps list, and install **Rekhu Assistant**. Use the branch of
 your Odoo version: `17.0`, `18.0` or `19.0`.
 
-### 3. Switch it on
+### 3. Set it up
 
-**Settings → Rekhu Assistant**: paste the key, switch the assistant on and press **Check the key**. The chat button
-appears at the bottom right for the users you chose (every internal user by default).
+**Settings → Rekhu Assistant**: paste the key and press **Check the key**. Then **Set up the assistant**: the set-up
+lists the apps installed here and their records, and per kind of record you choose *not here*, *read*, or *read and
+change*. **Save and switch on**, reload, and the chat button appears at the bottom right for the users you chose
+(every internal user by default). Until the set-up is done, the assistant does not run.
 
 Ask: *"Which leads above 10,000 are in the pipeline?"*
 
@@ -154,13 +156,13 @@ language.
 
 | Setting | |
 |---|---|
-| Rekhu Assistant | On or off. |
-| Secret key | `agk_…` from your Rekhu project; **Check the key** shows the credit left. |
+| Credit | The credit left on the Rekhu account, read when the settings open, with a **Top up** button. |
+| Where it works | **Set up the assistant** (or run it again); **The rules** lists and edits what it may read and change. |
+| Rekhu Assistant | On or off; the set-up switches it on. |
+| Secret key | `agk_…` from your Rekhu project; **Check the key** tests it. |
 | Who gets the assistant | A group; empty is every internal user. |
 | Name, greeting, quick questions | The chat's title, its first message, and questions to start with (separated by `|`). |
 | Your own rules | How the assistant works in your company, in a sentence or two. |
-| Models it may read | Technical model names, comma separated. |
-| Models it may create and change | Technical model names, comma separated. |
 | Model, Rekhu address | Leave these as they are unless Rekhu tells you otherwise. |
 
 ## Usage and limits

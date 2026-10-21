@@ -7,6 +7,17 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <app data-string="Rekhu Assistant" string="Rekhu Assistant" name="rekhu_assistant" groups="base.group_system">
+                    <block title="Account" name="rekhu_assistant_account">
+                        <setting string="Credit" help="What is left on the Rekhu account that pays for the assistant. Every answer uses a little of it; usage per company and per month is in your Rekhu account.">
+                            <div class="mt8">
+                                <span class="fs-4 fw-bold" invisible="not rekhu_assistant_credit"><field name="rekhu_assistant_credit" readonly="1" class="oe_inline"/></span>
+                                <span class="text-muted" invisible="rekhu_assistant_credit"><field name="rekhu_assistant_credit_note" readonly="1" class="oe_inline"/></span>
+                            </div>
+                            <div class="mt8">
+                                <button name="action_rekhu_assistant_top_up" type="object" string="Top up" class="btn-primary" icon="fa-credit-card"/>
+                            </div>
+                        </setting>
+                    </block>
                     <block title="Set-up" name="rekhu_assistant_setup">
                         <setting string="Where it works" help="The set-up looks at the apps installed here and lets you choose, per kind of record, whether the assistant may read it, read and change it, or not touch it. It does not run until this is done.">
                             <div class="mt8">

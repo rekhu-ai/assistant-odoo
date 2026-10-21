@@ -35,11 +35,26 @@ class Turn:
     def __init__(self, config, conversation, emit, who, app):
         self.config = config
         self.conversation = conversation
-        self.emit = emit
+        self.emit = self._once(emit)
         self.who = who
         self.app = app
         self.actions = {a['name']: a for a in app.actions()}
         self.lang = (who.get('locale'), config.get('locale'))
+
+    @staticmethod
+    def _once(emit):
+        """Each record or page gets one button per turn: a "page" card for a link already on screen (the done card of a
+        change just made, say) is left out."""
+        shown = set()
+
+        def send(event):
+            url = event.get('url') if event.get('type') == 'card' else None
+            if url and event.get('kind') == 'page' and url in shown:
+                return
+            if url:
+                shown.add(url)
+            emit(event)
+        return send
 
     def label(self, action):
         return label_of(action.get('label'), *self.lang) or action['description']
