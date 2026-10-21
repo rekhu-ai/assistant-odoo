@@ -3,6 +3,16 @@
 All notable changes to Rekhu Assistant for Odoo. The version in each Odoo branch is the series followed by this
 version: 17.0.1.0.0, 18.0.1.0.0 and 19.0.1.0.0 are all 1.0.0.
 
+## 1.0.1
+
+- **Credit in the settings.** Settings → Rekhu Assistant opens with the credit left on the Rekhu account and a Top up button.
+- **Tables in the chat.** An answer that lists records in a table now reads as a table.
+- **Confirm without asking twice.** A change goes straight to its confirm card; the assistant no longer asks "shall I go ahead?" first.
+- **Amounts as you read them.** Amounts on a confirm card show with the company's currency and thousands separators.
+- **One button per record.** A record just created or changed is not offered a second time with another Open button.
+- **Plain words.** The assistant names kinds of records as users know them (invoices, quotations), never by their technical name.
+- The store page, with screenshots and a banner.
+
 ## 1.0.0
 
 The first release, for Odoo 17, 18 and 19.
