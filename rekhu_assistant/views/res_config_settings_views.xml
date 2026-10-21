@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.rekhu_assistant</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Rekhu Assistant" string="Rekhu Assistant" name="rekhu_assistant" groups="base.group_system">
+                    <block title="Set-up" name="rekhu_assistant_setup">
+                        <setting string="Where it works" help="The set-up looks at the apps installed here and lets you choose, per kind of record, whether the assistant may read it, read and change it, or not touch it. It does not run until this is done.">
+                            <div class="mt8">
+                                <button name="action_rekhu_assistant_setup" type="object" string="Set up the assistant" class="btn-primary" invisible="rekhu_assistant_rules"/>
+                                <button name="action_rekhu_assistant_setup" type="object" string="Run the set-up again" class="btn-link" icon="oi-arrow-right" invisible="not rekhu_assistant_rules"/>
+                                <button name="%(rekhu_assistant.rekhu_assistant_scope_action)d" type="action" string="The rules" class="btn-link" icon="oi-arrow-right" invisible="not rekhu_assistant_rules"/>
+                            </div>
+                            <div class="text-muted mt8" invisible="not rekhu_assistant_rules"><field name="rekhu_assistant_rules" class="oe_inline"/> kinds of records</div>
+                        </setting>
+                        <setting string="Rekhu Assistant" help="The chat in the back office, for the users below. The set-up switches it on.">
+                            <field name="rekhu_assistant_enabled"/>
+                        </setting>
+                    </block>
+                    <block title="Connection" name="rekhu_assistant_connection">
+                        <setting string="Secret key" help="From the Connection tab of your Odoo project in your Rekhu account (agk_…). It stays on this server.">
+                            <field name="rekhu_assistant_key" password="True" placeholder="agk_…"/>
+                            <div class="mt8">
+                                <button name="action_rekhu_assistant_check" type="object" string="Check the key" class="btn-link" icon="oi-arrow-right"/>
+                            </div>
+                        </setting>
+                        <setting string="Who gets the assistant" help="Empty: every internal user.">
+                            <field name="rekhu_assistant_group_id" options="{'no_create': True}"/>
+                        </setting>
+                    </block>
+                    <block title="How it works here" name="rekhu_assistant_behaviour">
+                        <setting string="Name and greeting" help="What the chat is called, and its first message.">
+                            <div class="content-group">
+                                <div class="row"><label for="rekhu_assistant_name" class="col-lg-3 o_light_label"/><field name="rekhu_assistant_name"/></div>
+                                <div class="row"><label for="rekhu_assistant_greeting" class="col-lg-3 o_light_label"/><field name="rekhu_assistant_greeting"/></div>
+                                <div class="row"><label for="rekhu_assistant_quick" class="col-lg-3 o_light_label"/><field name="rekhu_assistant_quick"/></div>
+                            </div>
+                        </setting>
+                        <setting string="Your own rules" help="How the assistant should work in this company: tone, what to check first, what never to do.">
+                            <field name="rekhu_assistant_instructions"/>
+                        </setting>
+                        <setting string="Help topics" help="How things work in your company, one topic each: the assistant answers how-to questions from them.">
+                            <button name="%(rekhu_assistant.rekhu_assistant_help_action)d" type="action" string="Help topics" class="btn-link" icon="oi-arrow-right"/>
+                        </setting>
+                    </block>
+                    <block title="Advanced" name="rekhu_assistant_advanced">
+                        <setting string="Model and Rekhu address" help="Leave these as they are unless Rekhu tells you otherwise.">
+                            <div class="content-group">
+                                <div class="row"><label for="rekhu_assistant_model" class="col-lg-3 o_light_label"/><field name="rekhu_assistant_model"/></div>
+                                <div class="row"><label for="rekhu_assistant_platform" class="col-lg-3 o_light_label"/><field name="rekhu_assistant_platform"/></div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>
