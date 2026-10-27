@@ -24,6 +24,8 @@ own words: *"which invoices of Acme are overdue?"*, *"make a lead for Gemini Fur
 call with them on Monday"*. The assistant finds the records, answers, and does the work with the user's own access
 rights. Every change waits for a click on **Confirm**.
 
+> **Start free.** [Create a Rekhu account](https://rekhu.com/register?ref=assistant-odoo) and get **$10 credit** to try it, no card needed. After that you top up from $10 under **Billing**: no subscription, and unused credit never expires. [rekhu.com](https://rekhu.com) · [Docs](https://rekhu.com/docs) · [Pricing](https://rekhu.com/pricing)
+
 | | |
 |---|---|
 | **Finds and reads** | Searches every model you allow, reads records, and gives a button to open them. |
@@ -40,14 +42,14 @@ rights. Every change waits for a click on **Confirm**.
 |---|---|
 | Odoo | 17, 18 or 19, Community or Enterprise |
 | Python | the one your Odoo runs on (3.10 or newer); `requests`, which Odoo already uses |
-| Rekhu | an account with credit and a secret key: [sign up](https://rekhu.com/register), then top up from $10 under **Billing** |
+| Rekhu | an account with credit and a secret key: [sign up](https://rekhu.com/register?ref=assistant-odoo) and get $10 credit to start, then top up from $10 under **Billing** |
 | Network | the Odoo server reaches `https://api.rekhu.ai` over HTTPS; nothing calls into Odoo |
 
 ## Getting started
 
 ### 1. Get a secret key
 
-In your Rekhu account, under **Projects → New project**, choose **Odoo** and name it. On its **Connection** tab, add a
+[Create a Rekhu account](https://rekhu.com/register?ref=assistant-odoo) (it starts with $10 credit, no card needed). Under **Projects → New project**, choose **Odoo** and name it. On its **Connection** tab, add a
 key for the database (`production`, and `staging` if you have one). The key starts with `agk_` and is shown once.
 
 ### 2. Install the module

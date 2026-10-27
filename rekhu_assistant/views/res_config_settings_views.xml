@@ -32,7 +32,7 @@
                         </setting>
                     </block>
                     <block title="Connection" name="rekhu_assistant_connection">
-                        <setting string="Secret key" help="From the Connection tab of your Odoo project in your Rekhu account (agk_…). It stays on this server.">
+                        <setting string="Secret key" help="From the Connection tab of your Odoo project in your Rekhu account (agk_…). It stays on this server. No Rekhu account yet? Create one at https://rekhu.com/register?ref=assistant-odoo: it starts with $10 credit, no card needed.">
                             <field name="rekhu_assistant_key" password="True" placeholder="agk_…"/>
                             <div class="mt8">
                                 <button name="action_rekhu_assistant_check" type="object" string="Check the key" class="btn-link" icon="oi-arrow-right"/>
