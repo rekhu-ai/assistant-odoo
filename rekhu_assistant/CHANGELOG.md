@@ -3,6 +3,11 @@
 All notable changes to Rekhu Assistant for Odoo. The version in each Odoo branch is the series followed by this
 version: 17.0.1.0.0, 18.0.1.0.0 and 19.0.1.0.0 are all 1.0.0.
 
+## 1.0.2
+
+- **Start free.** The README and the store page say how to begin: [create a Rekhu account](https://rekhu.com/register?ref=assistant-odoo) and it starts with $10 credit, no card needed.
+- The key setting and the message for a missing key say where to get one, with a link to sign-up.
+
 ## 1.0.1
 
 - **Credit in the settings.** Settings → Rekhu Assistant opens with the credit left on the Rekhu account and a Top up button.
