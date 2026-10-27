@@ -47,7 +47,7 @@ def message(config, who, body, on_text):
     """Streams one model call; on_text gets every piece of text; returns {'content': [...], 'stop_reason': ...}."""
     key = parse_key(config['secret_key'])
     if not key:
-        raise Refused('The Rekhu secret key is missing or not a secret key (agk_…). Set it under Settings → Rekhu Assistant.', 400, 'config')
+        raise Refused('The Rekhu secret key is missing or not a secret key (agk_…). Set it under Settings → Rekhu Assistant. No Rekhu account yet? Create one at https://rekhu.com/register?ref=assistant-odoo: it starts with $10 credit, no card needed.', 400, 'config')
     response = requests.post(
         '%s/v1/messages' % config['platform'],
         headers=headers(key, config['version'], who['tenant'], who['user_ref'], who['conversation']),
