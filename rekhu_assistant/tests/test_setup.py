@@ -1,6 +1,7 @@
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
+from ..lib import params as settings
 from ..services.discover import discover
 
 
@@ -11,7 +12,7 @@ class TestSetup(TransactionCase):
     def setUp(self):
         super().setUp()
         self.env['rekhu.assistant.scope'].search([]).unlink()
-        self.env['ir.config_parameter'].sudo().set_param('rekhu_assistant.enabled', 'False')
+        settings.put(self.env, 'rekhu_assistant.enabled', 'False')
 
     def test_discovery_lists_installed_apps_with_their_records(self):
         found = discover(self.env)
@@ -34,7 +35,7 @@ class TestSetup(TransactionCase):
         setup.action_apply()
         rules = self.env['rekhu.assistant.scope']._rekhu_rules()
         self.assertEqual(rules, {'read': ['mail.activity'], 'change': ['mail.activity']})
-        self.assertEqual(self.env['ir.config_parameter'].sudo().get_param('rekhu_assistant.enabled'), 'True')
+        self.assertEqual(settings.get(self.env, 'rekhu_assistant.enabled'), 'True')
 
     def test_running_it_again_keeps_the_choices(self):
         self.env['rekhu.assistant.scope'].create({'model_id': self.env['ir.model']._get_id('mail.activity'), 'mode': 'read'})
@@ -49,4 +50,4 @@ class TestSetup(TransactionCase):
         setup.line_ids.write({'mode': 'off'})
         setup.action_apply()
         self.assertFalse(self.env['rekhu.assistant.scope'].search([]))
-        self.assertEqual(self.env['ir.config_parameter'].sudo().get_param('rekhu_assistant.enabled'), 'False')
+        self.assertEqual(settings.get(self.env, 'rekhu_assistant.enabled'), 'False')

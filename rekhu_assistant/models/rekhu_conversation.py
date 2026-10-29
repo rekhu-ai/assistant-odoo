@@ -6,6 +6,8 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 
+from ..lib import params as settings
+
 KEEP_DAYS = 14
 OWN = re.compile(r'^[a-zA-Z0-9-]{8,64}$')
 
@@ -47,7 +49,8 @@ class RekhuAssistantConversation(models.Model):
 
     @api.model
     def _rekhu_config(self):
-        get = self.env['ir.config_parameter'].sudo().get_param
+        def get(key, default=False):
+            return settings.get(self.env, key, default)
         manifest = self.env['ir.module.module'].sudo().search([('name', '=', 'rekhu_assistant')], limit=1)
         return {
             'enabled': get('rekhu_assistant.enabled') in ('True', 'true', '1'),
