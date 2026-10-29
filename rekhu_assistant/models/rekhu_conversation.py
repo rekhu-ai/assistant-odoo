@@ -56,7 +56,7 @@ class RekhuAssistantConversation(models.Model):
             'enabled': get('rekhu_assistant.enabled') in ('True', 'true', '1'),
             'secret_key': (get('rekhu_assistant.secret_key') or '').strip(),
             'platform': (get('rekhu_assistant.platform') or 'https://api.rekhu.ai').rstrip('/'),
-            'model': get('rekhu_assistant.model') or 'claude-sonnet-5',
+            'model': get('rekhu_assistant.model') or None,
             'name': get('rekhu_assistant.name') or 'Assistant',
             'greeting': get('rekhu_assistant.greeting') or '',
             'quick': [q.strip() for q in (get('rekhu_assistant.quick') or '').split('|') if q.strip()],
