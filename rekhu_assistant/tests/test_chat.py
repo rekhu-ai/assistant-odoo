@@ -3,6 +3,8 @@ from unittest.mock import patch
 
 from odoo.tests import HttpCase, new_test_user, tagged
 
+from ..lib import params as settings
+
 
 def answer(*blocks, stop='end_turn'):
     return {'content': list(blocks), 'stop_reason': stop}
@@ -15,7 +17,8 @@ class TestChat(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        set_param = cls.env['ir.config_parameter'].sudo().set_param
+        def set_param(key, value):
+            settings.put(cls.env, key, value)
         set_param('rekhu_assistant.enabled', 'True')
         set_param('rekhu_assistant.secret_key', 'agk_test-customer_assistant_secretsecretsecret')
         cls.env['rekhu.assistant.scope'].create({'model_id': cls.env['ir.model']._get_id('res.partner'), 'mode': 'change'})
@@ -45,7 +48,7 @@ class TestChat(HttpCase):
         self.assertEqual(self.post({'message': 'hi'}).status_code, 403)
 
     def test_switched_off_means_no_assistant(self):
-        self.env['ir.config_parameter'].sudo().set_param('rekhu_assistant.enabled', 'False')
+        settings.put(self.env, 'rekhu_assistant.enabled', 'False')
         self.authenticate('rekhu_chat', 'rekhu_chat_password')
         config = self.url_open('/rekhu/assistant/config').json()
         self.assertFalse(config['enabled'])

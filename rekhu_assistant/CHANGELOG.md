@@ -1,7 +1,12 @@
 # Changelog
 
 All notable changes to Rekhu Assistant for Odoo. The version in each Odoo branch is the series followed by this
-version: 17.0.1.0.0, 18.0.1.0.0 and 19.0.1.0.0 are all 1.0.0.
+version: 17.0.1.0.0, 18.0.1.0.0, 19.0.1.0.0 and 20.0.1.0.0 are all 1.0.0.
+
+## 1.0.3
+
+- **Odoo 20.** The module now works on Odoo 20 as well: the 20.0 branch keeps its access rights in `ir.access`, the model Odoo 20 uses, and settings are read and written with Odoo 20's typed methods (`get_str`, `set_str`) where they exist.
+- The requirements say where it runs: on your own server or Odoo.sh, not on Odoo Online, which takes no modules of its own or from the Apps store.
 
 ## 1.0.2
 

@@ -1,5 +1,6 @@
 from odoo import _, api, fields, models
 
+from ..lib import params as settings
 from ..services.discover import discover
 from .rekhu_scope import MODES
 
@@ -28,7 +29,7 @@ class RekhuAssistantSetup(models.TransientModel):
             if model not in known and model in self.env:
                 lines.append(fields.Command.create({'app': _('Other'), 'model_name': model, 'label': self.env[model]._description, 'records': self.env[model].sudo().search_count([]), 'mode': mode}))
         values['line_ids'] = lines
-        group = int(self.env['ir.config_parameter'].sudo().get_param('rekhu_assistant.group_id') or 0)
+        group = int(settings.get(self.env, 'rekhu_assistant.group_id') or 0)
         values['group_id'] = group or False
         return values
 
@@ -45,9 +46,8 @@ class RekhuAssistantSetup(models.TransientModel):
                 existing[model].write({'mode': mode})
             else:
                 scope.create({'model_id': self.env['ir.model']._get_id(model), 'app': apps.get(model), 'mode': mode})
-        params = self.env['ir.config_parameter'].sudo()
-        params.set_param('rekhu_assistant.group_id', self.group_id.id or '')
-        params.set_param('rekhu_assistant.enabled', 'True' if chosen else 'False')
+        settings.put(self.env, 'rekhu_assistant.group_id', self.group_id.id or '')
+        settings.put(self.env, 'rekhu_assistant.enabled', 'True' if chosen else 'False')
         return {
             'type': 'ir.actions.client', 'tag': 'display_notification',
             'params': {
