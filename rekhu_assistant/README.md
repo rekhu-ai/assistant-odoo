@@ -5,7 +5,7 @@
 <h1 align="center">Rekhu Assistant for Odoo</h1>
 
 <p align="center">
-  <img alt="Odoo 17, 18 and 19" src="https://img.shields.io/badge/Odoo-17%20%7C%2018%20%7C%2019-714B67">
+  <img alt="Odoo 17, 18, 19 and 20" src="https://img.shields.io/badge/Odoo-17%20%7C%2018%20%7C%2019%20%7C%2020-714B67">
   <img alt="Python 3.10 or newer" src="https://img.shields.io/badge/Python-3.10%2B-3776AB">
 </p>
 
@@ -40,7 +40,7 @@ rights. Every change waits for a click on **Confirm**.
 
 | Requirement | Version |
 |---|---|
-| Odoo | 17, 18 or 19, Community or Enterprise |
+| Odoo | 17, 18, 19 or 20, Community or Enterprise, on your own server or Odoo.sh. Not on Odoo Online, which does not take modules of its own or from the Apps store |
 | Python | the one your Odoo runs on (3.10 or newer); `requests`, which Odoo already uses |
 | Rekhu | an account with credit and a secret key: [sign up](https://rekhu.com/register?ref=assistant-odoo) and get $10 credit to start, then top up from $10 under **Billing** |
 | Network | the Odoo server reaches `https://api.rekhu.ai` over HTTPS; nothing calls into Odoo |
