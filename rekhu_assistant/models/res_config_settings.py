@@ -11,7 +11,7 @@ class ResConfigSettings(models.TransientModel):
     rekhu_assistant_enabled = fields.Boolean('Rekhu Assistant', config_parameter='rekhu_assistant.enabled')
     rekhu_assistant_key = fields.Char('Secret key', config_parameter='rekhu_assistant.secret_key', help='The secret key (agk_…) from the Connection tab of your project in your Rekhu account. It stays on this server.')
     rekhu_assistant_platform = fields.Char('Rekhu address', config_parameter='rekhu_assistant.platform', default='https://api.rekhu.ai')
-    rekhu_assistant_model = fields.Char('Model', config_parameter='rekhu_assistant.model', default='claude-sonnet-5')
+    rekhu_assistant_model = fields.Char('Model', config_parameter='rekhu_assistant.model', help='The model by its name in your Rekhu account. Empty uses the default model.')
     rekhu_assistant_name = fields.Char('Name in the chat', config_parameter='rekhu_assistant.name', default='Assistant')
     rekhu_assistant_greeting = fields.Char('Greeting', config_parameter='rekhu_assistant.greeting', help='The first message of a new chat. Empty: a short greeting in the user\'s language.')
     rekhu_assistant_quick = fields.Char('Quick questions', config_parameter='rekhu_assistant.quick', help='Shown in a new chat, separated by |, for example: Which invoices are overdue? | My activities for today')
