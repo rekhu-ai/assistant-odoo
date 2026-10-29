@@ -1,0 +1,7 @@
+id,name,model_id/id,group_id/id,operation,domain
+access_rekhu_help_user,rekhu.assistant.help user,model_rekhu_assistant_help,base.group_user,r,
+access_rekhu_help_system,rekhu.assistant.help system,model_rekhu_assistant_help,base.group_system,crud,
+access_rekhu_conversation_system,rekhu.assistant.conversation system,model_rekhu_assistant_conversation,base.group_system,rd,
+access_rekhu_scope_system,rekhu.assistant.scope system,model_rekhu_assistant_scope,base.group_system,crud,
+access_rekhu_setup_system,rekhu.assistant.setup system,model_rekhu_assistant_setup,base.group_system,crud,
+access_rekhu_setup_line_system,rekhu.assistant.setup.line system,model_rekhu_assistant_setup_line,base.group_system,crud,
