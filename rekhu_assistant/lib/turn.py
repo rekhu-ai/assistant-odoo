@@ -13,6 +13,8 @@ from .messages import message as say
 from .schema import validate
 
 RESULT_LIMIT = 30000
+# what the model is told when its answer reached the length limit: the actions in it were cut and none ran
+CUT_OFF = 'Your last answer reached its length limit and was cut off, so none of the actions in it ran. Go on in smaller steps: fewer actions in one answer, or shorter text.'
 
 
 def confirm_id(tool, value):
@@ -66,13 +68,24 @@ class Turn:
             self.conversation.messages.append({'role': 'user', 'content': str(text).strip()[:4000]})
         instructions = self.app.system()
         tools = self.tools()
+        stop, said = None, False
         for _step in range(self.config['max_steps']):
-            body = {'model': self.config['model'], 'max_tokens': self.config['max_tokens'], 'system': instructions, 'messages': cached(self.conversation.messages)}
+            body = {'model': self.config['model'], 'max_tokens': self.config['max_tokens'], 'system': instructions, 'messages': cached(paired(self.conversation.messages))}
             if tools:
                 body['tools'] = tools
             answer = platform.message(self.config, self.who, body, lambda delta: self.emit({'type': 'text', 'text': delta}))
-            self.conversation.messages.append({'role': 'assistant', 'content': answer['content']})
-            if answer['stop_reason'] != 'tool_use':
+            stop = answer['stop_reason']
+            content = answer['content']
+            if stop == 'max_tokens':
+                # an action cut off halfway never runs: the answer keeps its text, and the model goes on in smaller steps
+                content = [b for b in content if b.get('type') != 'tool_use']
+            if any(b.get('type') in ('text', 'tool_use') for b in content):
+                self.conversation.messages.append({'role': 'assistant', 'content': content})
+            said = said or any(b.get('type') == 'text' and b.get('text') for b in content)
+            if stop == 'max_tokens':
+                self.conversation.messages.append({'role': 'user', 'content': [{'type': 'text', 'text': CUT_OFF}]})
+                continue
+            if stop != 'tool_use':
                 break
             results = []
             for block in answer['content']:
@@ -90,6 +103,11 @@ class Turn:
                     result['is_error'] = True
                 results.append(result)
             self.conversation.messages.append({'role': 'user', 'content': results})
+        if stop in ('tool_use', 'max_tokens'):
+            # the steps of one answer ran out before the work was done: the user reads where it stopped and how to go on
+            text = say('too_big', *self.lang)
+            self.emit({'type': 'text', 'text': ('\n\n' if said else '') + text})
+            self.conversation.messages.append({'role': 'assistant', 'content': [{'type': 'text', 'text': text}]})
 
     def confirmed(self, cid):
         """The user clicked confirm: the action runs now with exactly the input they saw, and the model is told."""
@@ -190,3 +208,44 @@ def cached(messages):
     blocks[-1] = dict(blocks[-1], cache_control={'type': 'ephemeral'})
     copy.append({'role': last['role'], 'content': blocks})
     return copy
+
+
+def paired(messages):
+    """The messages with every action call followed by its result, as the model requires: a call without a result (an
+    answer that broke off before its actions ran) and a result without its call are left out, and so is a message that
+    is empty without them. A conversation stored with such a gap goes on instead of being refused."""
+    def blocks(message, kind):
+        content = (message or {}).get('content')
+        return [b for b in content if isinstance(b, dict) and b.get('type') == kind] if isinstance(content, list) else []
+
+    kept = {}
+    for i, message in enumerate(messages):
+        if message['role'] == 'assistant':
+            answered = {b.get('tool_use_id') for b in blocks(messages[i + 1] if i + 1 < len(messages) else None, 'tool_result')}
+            kept[i] = {b.get('id') for b in blocks(message, 'tool_use') if b.get('id') in answered}
+    out = []
+    for i, message in enumerate(messages):
+        if not isinstance(message['content'], list):
+            out.append(message)
+            continue
+        calls = kept[i] if message['role'] == 'assistant' else (kept.get(i - 1, set()) if i and messages[i - 1]['role'] == 'assistant' else set())
+        content = [b for b in message['content'] if not isinstance(b, dict)
+                   or (b.get('id') in calls if b.get('type') == 'tool_use' else b.get('tool_use_id') in calls if b.get('type') == 'tool_result' else True)]
+        if any(not isinstance(b, dict) or b.get('type') != 'thinking' for b in content):
+            out.append(dict(message, content=content))
+    return out
+
+
+def failure_kind(error):
+    """paused, credit, overloaded, conversation or unavailable: what a failed turn means for the user."""
+    kind = getattr(error, 'kind', '') if isinstance(error, platform.Refused) else ''
+    status = getattr(error, 'status', 0) if isinstance(error, platform.Refused) else 0
+    if kind == 'app_limit':
+        return 'paused'
+    if kind == 'billing_error' or status == 402:
+        return 'credit'
+    if kind in ('rate_limit_error', 'overloaded_error') or status in (429, 529) or 'overloaded' in str(error).lower():
+        return 'overloaded'
+    if kind == 'invalid_request_error' or status == 400:
+        return 'conversation'
+    return 'unavailable'

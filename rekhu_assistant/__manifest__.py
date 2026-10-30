@@ -1,7 +1,7 @@
 {
     'name': 'Rekhu Assistant',
     'summary': 'An AI assistant inside Odoo that finds records, answers from your help and does the work, with each user\'s own access rights',
-    'version': '18.0.1.0.4',
+    'version': '18.0.1.0.5',
     'category': 'Productivity',
     'author': 'Rekhu',
     'website': 'https://rekhu.com/products/assistant',
