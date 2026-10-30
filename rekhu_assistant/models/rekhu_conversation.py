@@ -66,7 +66,7 @@ class RekhuAssistantConversation(models.Model):
             'group_id': int(get('rekhu_assistant.group_id') or 0),
             'version': manifest.latest_version or manifest.installed_version or '1.0',
             'max_steps': 8,
-            'max_tokens': 4000,
+            'max_tokens': 16000,
         }
 
 

@@ -19,7 +19,7 @@ from odoo.http import request
 
 from ..lib import platform
 from ..lib.messages import message as say
-from ..lib.turn import Turn
+from ..lib.turn import Turn, failure_kind
 from ..services.app import OdooApp
 
 _logger = logging.getLogger(__name__)
@@ -147,11 +147,18 @@ class RekhuAssistantController(http.Controller):
                         # what happened so far stays, also when the model stopped halfway
                         conversation.save()
             except platform.Refused as refused:
-                _logger.warning('rekhu assistant: %s', refused)
-                events.put({'type': 'error', 'message': say('unavailable', locale)})
-            except Exception:  # noqa: BLE001 never a stack trace in the chat; the log has it
+                # the log says why for the developer; the user reads what it means for them and what to do
+                kind = failure_kind(refused)
+                _logger.warning('rekhu assistant: %s (%s)', refused, {
+                    'paused': 'the assistant is paused or at its monthly limit; see the Assistant tab of the project in your Rekhu account',
+                    'credit': 'the credit of your Rekhu account is used up; top up under Billing in your Rekhu account',
+                    'overloaded': 'the model is overloaded or rate limited; the user was asked to try again',
+                    'conversation': 'the model refused this conversation; the user was asked to start a new chat',
+                }.get(kind, 'the user was told the assistant cannot be reached'))
+                events.put({'type': 'error', 'message': say(kind, locale)})
+            except Exception as error:  # noqa: BLE001 never a stack trace in the chat; the log has it
                 _logger.exception('rekhu assistant: the turn failed')
-                events.put({'type': 'error', 'message': say('unavailable', locale)})
+                events.put({'type': 'error', 'message': say(failure_kind(error), locale)})
             finally:
                 events.put({'type': 'done'})
                 events.put(None)
