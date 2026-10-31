@@ -41,6 +41,12 @@ class TestApp(RekhuCase):
         self.assertFalse(outcome['ok'])
         self.assertIn('no field', outcome['error'])
 
+    def test_settings_show_the_version(self):
+        module = self.env['ir.module.module'].search([('name', '=', 'rekhu_assistant')])
+        settings = self.env['res.config.settings'].new({})
+        self.assertTrue(settings.rekhu_assistant_version.startswith(module.latest_version.split('.', 2)[2] + ' · Odoo '))
+        self.assertFalse(settings.rekhu_assistant_version_note)
+
     def test_the_menus_are_pages(self):
         pages = OdooApp(self.env, self.config).pages()
         self.assertTrue(pages)

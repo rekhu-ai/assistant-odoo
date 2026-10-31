@@ -8,6 +8,10 @@
             <xpath expr="//form" position="inside">
                 <app data-string="Rekhu Assistant" string="Rekhu Assistant" name="rekhu_assistant" groups="base.group_system">
                     <block title="Account" name="rekhu_assistant_account">
+                        <setting string="Version" help="The version of Rekhu Assistant this database runs.">
+                            <field name="rekhu_assistant_version" readonly="1"/>
+                            <div class="text-warning mt8" invisible="not rekhu_assistant_version_note"><field name="rekhu_assistant_version_note" readonly="1"/></div>
+                        </setting>
                         <setting string="Credit" help="What is left on the Rekhu account that pays for the assistant. Every answer uses a little of it; usage per company and per month is in your Rekhu account.">
                             <div class="mt8">
                                 <span class="fs-4 fw-bold" invisible="not rekhu_assistant_credit"><field name="rekhu_assistant_credit" readonly="1" class="oe_inline"/></span>
