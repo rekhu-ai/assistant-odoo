@@ -3,6 +3,10 @@
 All notable changes to Rekhu Assistant for Odoo. The version in each Odoo branch is the series followed by this
 version: 17.0.1.0.0, 18.0.1.0.0, 19.0.1.0.0 and 20.0.1.0.0 are all 1.0.0.
 
+## 1.0.6
+
+- **The version in Settings.** Settings → Rekhu Assistant shows the version this database runs, with the Odoo version, at the top of Account. When the server already holds newer files that the database has not loaded yet, it says which version waits, and that Apps → Rekhu Assistant → Upgrade loads it. Before, the version showed only in developer mode, on the module's technical data.
+
 ## 1.0.5
 
 - **Long requests finish instead of breaking the chat.** An answer cut off at its length (a request for dozens of files at once) runs none of its half-written actions; the assistant is told and goes on in smaller steps in the same turn. Before, the cut-off answer was stored as it was, and the model refused every next message in that conversation.
