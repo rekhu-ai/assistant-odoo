@@ -1,8 +1,13 @@
-from odoo import _, fields, models
+from odoo import _, fields, models, release
 from odoo.exceptions import UserError
 
 from ..lib import platform
 
+
+def short_version(full):
+    """1.0.5 from 20.0.1.0.5: the module's own version without the Odoo series in front."""
+    parts = str(full or '').split('.')
+    return '.'.join(parts[2:]) if len(parts) > 3 else str(full or '')
 
 
 class ResConfigSettings(models.TransientModel):
@@ -21,6 +26,18 @@ class ResConfigSettings(models.TransientModel):
     rekhu_assistant_rules = fields.Integer('Rules', compute='_compute_rekhu_assistant_rules')
     rekhu_assistant_credit = fields.Char('Credit', compute='_compute_rekhu_assistant_credit')
     rekhu_assistant_credit_note = fields.Char(compute='_compute_rekhu_assistant_credit')
+    rekhu_assistant_version = fields.Char('Version', compute='_compute_rekhu_assistant_version')
+    rekhu_assistant_version_note = fields.Char(compute='_compute_rekhu_assistant_version')
+
+    def _compute_rekhu_assistant_version(self):
+        """The version this database runs, and a note when the server holds a newer one that waits for an upgrade."""
+        record = self.env['ir.module.module'].sudo().search([('name', '=', 'rekhu_assistant')], limit=1)
+        loaded, files = short_version(record.latest_version), short_version(record.installed_version)
+        shown = '%s · Odoo %s' % (loaded or files, release.major_version)
+        note = _('Version %s is on the server: Apps → Rekhu Assistant → Upgrade loads it.', files) if files and loaded and files != loaded else False
+        for settings in self:
+            settings.rekhu_assistant_version = shown
+            settings.rekhu_assistant_version_note = note
 
     def _compute_rekhu_assistant_credit(self):
         """The credit left on the Rekhu account, read live when the settings open; a short note when it cannot be read."""
